@@ -1,26 +1,303 @@
 @import "tailwindcss";
 
+/* =========================================================
+   테마 시스템 - CSS 변수 기반
+   data-theme="cute|digital|gaming" 을 <html>에 적용
+   ========================================================= */
+
+/* 기본값 = cute 테마 (SSR 첫 페인트용) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #fff5f9;
+  --bg-soft: #ffe4ef;
+  --fg: #4a2b3a;
+  --fg-muted: #8a6775;
+  --card: #ffffff;
+  --card-border: #ffd4e5;
+  --accent: #ff7eb6;
+  --accent-2: #b18cff;
+  --accent-3: #ffd166;
+  --danger: #ff6b9d;
+  --success: #9ad17a;
+  --radius: 20px;
+  --radius-sm: 14px;
+  --shadow: 0 10px 30px -10px rgba(255, 126, 182, 0.35);
+  --shadow-soft: 0 4px 14px rgba(255, 126, 182, 0.2);
+  --glow: 0 0 0 rgba(0, 0, 0, 0);
+  --ring: rgba(255, 126, 182, 0.4);
+  --font-display: var(--font-geist-sans);
 }
 
+/* Cute: 파스텔, 둥근 */
+html[data-theme="cute"] {
+  --bg: #fff5f9;
+  --bg-soft: #ffe4ef;
+  --fg: #4a2b3a;
+  --fg-muted: #8a6775;
+  --card: #ffffff;
+  --card-border: #ffd4e5;
+  --accent: #ff7eb6;
+  --accent-2: #b18cff;
+  --accent-3: #ffd166;
+  --danger: #ff6b9d;
+  --success: #9ad17a;
+  --radius: 20px;
+  --radius-sm: 14px;
+  --shadow: 0 10px 30px -10px rgba(255, 126, 182, 0.35);
+  --shadow-soft: 0 4px 14px rgba(255, 126, 182, 0.2);
+  --glow: 0 0 20px rgba(255, 126, 182, 0.45);
+  --ring: rgba(255, 126, 182, 0.4);
+}
+
+/* Digital: 사이버펑크 네온 다크 */
+html[data-theme="digital"] {
+  --bg: #0a0a1a;
+  --bg-soft: #12122a;
+  --fg: #e8e8ff;
+  --fg-muted: #8a8ab8;
+  --card: #15152e;
+  --card-border: #2a2a55;
+  --accent: #c77dff;
+  --accent-2: #ff2ec4;
+  --accent-3: #00f0ff;
+  --danger: #ff3860;
+  --success: #39ff14;
+  --radius: 4px;
+  --radius-sm: 2px;
+  --shadow: 0 0 24px rgba(199, 125, 255, 0.35);
+  --shadow-soft: 0 0 10px rgba(0, 240, 255, 0.25);
+  --glow: 0 0 24px rgba(199, 125, 255, 0.8), 0 0 48px rgba(255, 46, 196, 0.4);
+  --ring: rgba(0, 240, 255, 0.6);
+}
+
+/* Gaming: 네이비 + 골드 임팩트 */
+html[data-theme="gaming"] {
+  --bg: #0b1426;
+  --bg-soft: #13203a;
+  --fg: #f2f6ff;
+  --fg-muted: #9bb0cf;
+  --card: #182a47;
+  --card-border: #2b4065;
+  --accent: #ffb300;
+  --accent-2: #ff3b30;
+  --accent-3: #2e9cff;
+  --danger: #ff3b30;
+  --success: #30d158;
+  --radius: 8px;
+  --radius-sm: 6px;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --glow: 0 0 18px rgba(255, 179, 0, 0.7);
+  --ring: rgba(255, 179, 0, 0.55);
+}
+
+/* Tailwind v4: CSS 변수를 색상 유틸과 연결 */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --font-sans: var(--font-app);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* =========================================================
+   언어별 본문 폰트 매핑
+   - layout.tsx에서 next/font가 각 폰트 CSS 변수를 주입
+   - html[lang]을 LocaleProvider가 동기화하므로 자동 전환
+   - --font-app 을 본문 공통 변수로 사용
+   - Latin 계열(en/es/pt/fr/de/it/nl/id/vi/tr/pl)은 Geist 기본
+   ========================================================= */
+:root {
+  --font-app:
+    var(--font-geist-sans), ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* CJK */
+html[lang="ko"] {
+  --font-app:
+    var(--font-noto-kr), var(--font-geist-sans), ui-sans-serif,
+    system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+html[lang="ja"] {
+  --font-app:
+    var(--font-noto-jp), var(--font-geist-sans), ui-sans-serif,
+    system-ui, "Hiragino Sans", "Yu Gothic", sans-serif;
+}
+html[lang="zh"] {
+  --font-app:
+    var(--font-noto-sc), var(--font-geist-sans), ui-sans-serif,
+    system-ui, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 키릴 (러시아어) — Noto Sans 보편 폰트로 */
+html[lang="ru"] {
+  --font-app:
+    var(--font-noto-sans), var(--font-geist-sans), ui-sans-serif,
+    system-ui, sans-serif;
+}
+
+/* 아랍어 (RTL) */
+html[lang="ar"] {
+  --font-app:
+    var(--font-noto-ar), var(--font-geist-sans), ui-sans-serif,
+    system-ui, "Geeza Pro", "Segoe UI", sans-serif;
+}
+
+/* 힌디 (데바나가리) */
+html[lang="hi"] {
+  --font-app:
+    var(--font-noto-dv), var(--font-geist-sans), ui-sans-serif,
+    system-ui, sans-serif;
+}
+
+/* 벵골어 */
+html[lang="bn"] {
+  --font-app:
+    var(--font-noto-bn), var(--font-geist-sans), ui-sans-serif,
+    system-ui, sans-serif;
+}
+
+/* 태국어 */
+html[lang="th"] {
+  --font-app:
+    var(--font-noto-th), var(--font-geist-sans), ui-sans-serif,
+    system-ui, sans-serif;
+}
+
+/* =========================================================
+   RTL (아랍어 등) 보정
+   - Tailwind v4는 logical property 지원이 기본이지만
+     기존 코드에 물리적 left/right가 섞여 있어 최소한의 반전만 처리
+   ========================================================= */
+html[dir="rtl"] body {
+  /* 대부분의 flex 레이아웃은 자동 반전되므로 별도 설정 불필요 */
+}
+html[dir="rtl"] .zq-animate-out {
+  /* shake-out 애니메이션 X축을 원래 그대로 유지 (RTL에서도 자연스럽게 흔들림) */
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-app);
+  font-feature-settings: "ss01", "cv11";
+  letter-spacing: -0.003em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+/* CJK는 자간을 살짝 넓혀서 가독성 확보 */
+html[lang="ko"] body,
+html[lang="ja"] body,
+html[lang="zh"] body {
+  letter-spacing: 0;
+  font-feature-settings: normal;
+}
+
+/* 헤딩은 조금 더 타이트하게 */
+h1, h2, h3 {
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+html[lang="ko"] h1, html[lang="ja"] h1, html[lang="zh"] h1,
+html[lang="ko"] h2, html[lang="ja"] h2, html[lang="zh"] h2,
+html[lang="ko"] h3, html[lang="ja"] h3, html[lang="zh"] h3 {
+  letter-spacing: -0.01em;
+  font-weight: 900;
+}
+
+/* 링 포커스 스타일 */
+*:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   공통 애니메이션 (토너먼트 Fun 요소)
+   ========================================================= */
+
+@keyframes zq-pick-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.12); filter: brightness(1.25); }
+  100% { transform: scale(1.06); }
+}
+
+@keyframes zq-shake-out {
+  0% { transform: translateX(0) scale(1); filter: grayscale(0); opacity: 1; }
+  20% { transform: translateX(-8px) scale(0.98); filter: grayscale(0.4); }
+  40% { transform: translateX(8px) scale(0.96); filter: grayscale(0.7); }
+  60% { transform: translateX(-6px) scale(0.9); filter: grayscale(1); }
+  100% { transform: translateX(0) scale(0.7); filter: grayscale(1); opacity: 0; }
+}
+
+@keyframes zq-vs-punch {
+  0% { transform: scale(0.2) rotate(-15deg); opacity: 0; }
+  60% { transform: scale(1.4) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+@keyframes zq-slide-in {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes zq-confetti-fall {
+  0% { transform: translateY(-20vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes zq-glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, -1px); }
+  80% { transform: translate(1px, 1px); }
+}
+
+@keyframes zq-pulse-glow {
+  0%, 100% { box-shadow: var(--shadow); }
+  50% { box-shadow: var(--glow); }
+}
+
+@keyframes zq-float-up {
+  0% { transform: translateY(0) scale(0.6); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(-60px) scale(1.1); opacity: 0; }
+}
+
+.zq-animate-picked {
+  animation: zq-pick-pop 0.5s ease forwards;
+  box-shadow: var(--glow);
+}
+
+.zq-animate-out {
+  animation: zq-shake-out 0.6s ease forwards;
+  pointer-events: none;
+}
+
+.zq-animate-vs {
+  animation: zq-vs-punch 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.zq-animate-slide {
+  animation: zq-slide-in 0.4s ease forwards;
+}
+
+html[data-theme="digital"] .zq-animate-picked {
+  animation: zq-pick-pop 0.5s ease forwards, zq-glitch 0.35s linear 0.5s 2;
 }
